@@ -1,0 +1,25 @@
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: iris-smote-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: iris-smote
+        image: your-docker-repo/iris-smote:latest
+        command: ["python", "/workspace/iris_smote_script.py"]
+        volumeMounts:
+        - name: pvc-storage
+          mountPath: /mnt/data
+        resources:
+          limits:
+            cpu: "8"
+            memory: "32Gi"
+      restartPolicy: Never
+      volumes:
+      - name: pvc-storage
+        persistentVolumeClaim:
+          claimName: your-pvc-name
+  backoffLimit: 3
